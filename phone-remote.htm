@@ -1,0 +1,337 @@
+<html>
+  <head>
+	<title>snom javascript screen</title>
+	<style type="text/css">    
+* { padding: 0; margin: 0; }
+
+body {
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 12px;
+}
+
+#wrapper { 
+ margin: 0 auto;
+ width: 922px;
+
+}
+#header {
+ color: #333;
+ width: 900px;
+ float: left;
+ padding: 10px;
+ border: 0px;
+ height: 30px;
+ margin: 10px 0px 5px 0px;
+ /*background: #015C87;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+ */
+}
+#leftcolumn {
+	height: 340px;
+	float: left;
+}
+#leftcolumn form { 
+ color: #39a9dc;
+ border: 1px solid #ccc;
+ background: #fff;
+ margin: 0px 5px 5px 0px;
+ font-weight: bold;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+ padding: 10px;
+ width: 235px;
+ float: left;
+}
+
+#title { 
+ color: #555;
+ /* 
+ border: 0px solid #ccc;
+ background: #ccc;
+ */
+ margin: 0px 5px 5px 0px;
+}
+
+#leftcolumn h2 {
+	color: #39a9dc;
+	margin: 10px;
+}
+#leftcolumn input {
+	width: 95px;
+	border: 1px solid #39a9dc;
+	padding: 3px;
+}
+#leftcolumn .button {
+	border: 1px solid #ccc;
+	margin: 3px;
+	padding: 3px;
+	background: #ccc;
+}
+
+#rightcolumn { 
+ float: right;
+ color: #39a9dc;
+ border: 0px solid #ccc;
+ background: #ccc;
+ margin: 0px 0px 0px 0px;
+ padding: 10px;
+ height: 340px;
+ width: 638px;
+ display: inline;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+}
+
+#keypaddelme {
+ /*float: right;*/
+ color: #007abf;
+ border: 0px solid #ccc;
+ background: #fdc00d;
+ margin: 0px 0px 5px 0px;
+ padding: 10px;
+ height: 200px;
+ width: 638px;
+ display: inline;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+
+}
+#footer { 
+ width: 900px;
+ clear: both;
+ color: #333;
+ border: 0px solid #ccc;
+ background: #;
+ margin: 0px 0px 10px 0px;
+ padding: 10px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+}
+input { margin: 5px;}
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script>
+
+    //TODO: Fix auth issue (XDR issue)
+    /*
+    function make_base_auth(username, password) {
+        return "Basic " + btoa(username + ":" + password);
+    }    
+    function sendHttpReq(url, username, password) {
+        if(username == ''){
+            $.get(url); 
+        } else {
+            var auth = make_base_auth(username, password);
+            //jquery ajax request 
+            $.ajax({
+                url : url,
+                method : 'GET',
+                beforeSend : function(req) {
+                    req.setRequestHeader('Authorization', auth);
+                }
+            });
+        } 
+    }
+    */
+    function sendHttpReq(url){
+        $.get(url);
+    }
+    
+    var screenUrl;
+    function startVideo(form) {
+        //TODO: Fix auth issue (XDR issue)
+        /*
+        if(typeof form.user.value != ''){
+            var screenUrl = form.proto.value + '://' + form.user.value + ':' + form.password.value + '@' + form.phone.value + ':' + form.port.value + '/screen.bmp';
+        } else {
+            var screenUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/screen.bmp';
+        } */   
+        var screenUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/screen.bmp';
+        
+        $('#image-buffer').load(function(){
+            var loadedImage = $(this).attr('src');
+            $('#image-displayed').attr('src', loadedImage);
+            $(this).attr('src', screenUrl + '?nocache=' + Math.random());
+        });
+        $('#image-buffer').attr('src', screenUrl + '?nocache=' + Math.random());
+    }
+
+    function stopVideo(){
+        $('#image-buffer').unbind('load');
+        $('#image-buffer').attr('src', '');
+        $('#image-displayed').attr('src', '');
+    }
+
+    function pressKey(form){
+        var key = form.key.value;
+        var commandUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/command.htm?key=' + key;
+        sendHttpReq(commandUrl);    
+    }
+
+    function dialNumber(form){
+        var number = form.number.value;
+        var commandUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/command.htm?number=' + number;
+        sendHttpReq(commandUrl);
+    }
+
+    function endCalls(form){
+        var command = 'RELEASE_ALL_CALLS';
+        var commandUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/command.htm?' + command;
+        sendHttpReq(commandUrl);    
+    }
+
+    function rebootPhone(form){
+        var commandUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/advanced_update.htm?reboot=Reboot';
+        sendHttpReq(commandUrl);    
+    }
+
+    function setSetting(form){
+        var setting_name = form.setting_name.value;
+        var setting_value = form.setting_value.value;
+        var commandUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/dummy.htm?settings=save&' + setting_name + '=' + setting_value; 
+        sendHttpReq(commandUrl);    
+    }
+
+    </script>
+  </head>
+  
+  <body>
+
+
+   <!-- Begin Wrapper -->
+   <div id="wrapper">
+   
+         <!-- Begin Header -->
+         <div id="header"></div>
+		 <!-- End Header -->
+		 <!-- Begin Left Column -->
+		 <div id="leftcolumn">
+					<form name="form">
+					<h2>Phone:</h2>
+                    <div><label>Phone IP: </label><input type="text" name="phone"/></div>
+                    <!-- FIXME: browser security checks will not allow HTTPS-->
+                    <input type="hidden" name="proto" value="http">
+                    <!--
+                    <div><label>HTTP: </label><input type="radio" name="proto" value="http" checked/></div>
+                    <div><label>HTTPS: </label><input type="radio" name="proto" value="https"/></div>
+                    -->
+                    <div><label>TCP Port: </label><input type="text" name="port"/ value="80"></div>
+                    <!-- FIXME: browser sercurity checks will not allow -->
+					<!--
+                    <div><label>Phone User: </label><input type="text" name="user"/></div>
+					<div><label>Phone Password: </label><input type="password" name="password"/></div>
+                    -->
+                    <hr/>
+					<div>
+                        <label>View the phone display</label>
+                    </div>
+					<div>
+						<input class="button" type="button" name="button" value="Start Video" onClick="startVideo(this.form);" />
+						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo();" />
+                    </div>
+                    <hr/>
+                    <div>
+                        <label>Dial a number</label>
+                    </div>
+                    <div>
+                        <input type="text" name="number"/>
+                        <input class="button" type="button" name="button" value="Dial" onClick="dialNumber(this.form);" />
+                    </div>
+                    <hr/>
+                    <div>
+                        <label>End all the calls</label>
+                        <input class="button" type="button" name="button" value="End Calls" onClick="endCalls(this.form);" />
+                    </div>
+                    <hr/>
+                    <div>
+                        <label>Configure a setting</label>
+                    </div>
+                    <div>
+                        <label>Setting name: </label><input type="text" name="setting_name"/>
+                    </div>
+                    <div>
+                        <label>Setting value: </label><input type="text" name="setting_value"/>
+                    </div>
+                    <div>
+                        <label>Apply </label><input class="button" type="button" name="button" value="Setting" onClick="setSetting(this.form);" />
+                    </div>
+
+                    <hr/>
+                    <div>
+                        <label>Press a key</label>
+                    </div>
+                    <div>
+                        <label>Select the key: </label>
+                        <select name="key" onChange="pressKey(this.form)">
+                            <option value=""></option>
+                            <option value="OFFHOOK">OFFHOOK</option>
+                            <option value="ONHOOK">ONHOOK</option>
+                            <option value="ENTER">ENTER</option>
+                            <option value="CANCEL">CANCEL</option>
+                            <option value="RIGHT">RIGHT</option>
+                            <option value="LEFT">LEFT</option>
+                            <option value="UP">UP</option>
+                            <option value="DOWN">DOWN</option>
+                            <option value="VOLUME_UP">VOLUME_UP</option>
+                            <option value="VOLUME_DOWN">VOLUME_DOWN</option>
+                            <option value="MENU">MENU</option>
+                            <option value="REDIAL">REDIAL</option>
+                            <option value="DND">DND</option>
+                            <option value="F1">F1</option>
+                            <option value="F2">F2</option>
+                            <option value="F3">F3</option>
+                            <option value="F4">F4</option>
+                            <option value="P1">P1</option>
+                            <option value="P2">P2</option>
+                            <option value="P3">P3</option>
+                            <option value="P4">P4</option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="*">*</option>
+                            <option value="#">#</option>
+                        </select>
+                    </div>
+                    <hr/>
+                    <div>
+                        <label>Reboot the phone</label>
+                        <input class="button" type="button" name="button" value="Reboot" onClick="rebootPhone(this.form);" />
+                    </div>
+ 
+					</form>
+		</div>
+		 <!-- End Left Column -->
+		<div id="title">
+			<b>Snom phone remote control</b><br/>
+			<b>NOTE:</b> This script doesn't support any security feature, sould be intended only as a feature showcase.<br/>
+			<hr/>
+            This script doesn't support HTTP authentication, to make it working please disable WUI authentication and hidden tags on the phone.
+			HTTPS isn't supported on this application.
+		</div>
+		 <!-- Begin Right Column -->
+		 <div id="rightcolumn">
+			<center>
+                <!-- <h1>Phone screen</h1> -->
+				<img id="image-displayed"/>
+    			<img id="image-buffer" style="visibility: hidden;"/>
+			</center>
+        </div>
+		 <!-- End Right Column -->
+   </div>
+   <!-- End Wrapper -->
+
+  </body>
+</html>
