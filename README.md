@@ -19,3 +19,7 @@ Troug this page you can remotely:
 This tool doesn't support any security feature, so in order to make it working you have to disable the HTTP authentication, hidden tags and you must use HTTP.
 
 This tool is intened just as a feature showcase.
+
+## Usage
+
+You can use it directly from [http://snomio.github.io/Snom-remote-control/phone-remote.htm](http://snomio.github.io/Snom-remote-control/phone-remote.htm).
