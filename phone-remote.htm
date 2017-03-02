@@ -71,19 +71,49 @@ body {
 	background: #ccc;
 }
 
-#rightcolumn { 
- float: right;
+#centercolumn { 
+ float: left;
  color: #39a9dc;
  border: 0px solid #ccc;
  background: #ccc;
  margin: 0px 0px 0px 0px;
  padding: 10px;
  height: 340px;
- width: 638px;
+ width: 450px;
  display: inline;
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
     border-radius: 20px;
+}
+
+#rightcolumn { 
+ float: left;
+ color: #39a9dc;
+ border: 0px solid #ccc;
+ background: #ccc;
+ margin: 0px 0px 0px 20px;
+ padding: 10px;
+ height: 340px;
+ width: 150px;
+ display: inline;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+}
+
+#largecolumn { 
+ float: right;
+ color: #39a9dc;
+ border: 0px solid #ccc;
+ background: #ccc;
+ margin: 20px 0px 0px 0px;
+ padding: 10px;
+ height: 450px;
+ width: 640px;
+ display: inherit;
+ -moz-border-radius: 20px;
+ -webkit-border-radius: 20px;
+ border-radius: 20px;
 }
 
 #keypaddelme {
@@ -144,7 +174,24 @@ input { margin: 5px;}
     }
     
     var screenUrl;
-    function startVideo(form) {
+    function startVideo(form, image) {
+        switch(image){
+            case 'screen':
+                var imageFile = '/screen.bmp';
+                var screenBufferId = '#screen-buffer';
+                var screenDisplayedId = '#screen-displayed';
+                break;
+            case 'label':
+                var imageFile = '/label_screen.bmp';
+                var screenBufferId = '#label-buffer';
+                var screenDisplayedId = '#label-displayed';
+                break;
+            case 'exp':
+                var imageFile = '/exp_screen.bmp';
+                var screenBufferId = '#exp-buffer';
+                var screenDisplayedId = '#exp-displayed';
+                break;
+        }
         //TODO: Fix auth issue (XDR issue)
         /*
         if(typeof form.user.value != ''){
@@ -152,20 +199,34 @@ input { margin: 5px;}
         } else {
             var screenUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/screen.bmp';
         } */   
-        var screenUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + '/screen.bmp';
+        var screenUrl = form.proto.value + '://' + form.phone.value + ':' + form.port.value + imageFile;
         
-        $('#image-buffer').load(function(){
+        $(screenBufferId).load(function(){
             var loadedImage = $(this).attr('src');
-            $('#image-displayed').attr('src', loadedImage);
+            $(screenDisplayedId).attr('src', loadedImage);
             $(this).attr('src', screenUrl + '?nocache=' + Math.random());
         });
-        $('#image-buffer').attr('src', screenUrl + '?nocache=' + Math.random());
+        $(screenBufferId).attr('src', screenUrl + '?nocache=' + Math.random());
     }
 
-    function stopVideo(){
-        $('#image-buffer').unbind('load');
-        $('#image-buffer').attr('src', '');
-        $('#image-displayed').attr('src', '');
+    function stopVideo(image){
+        switch(image){
+            case 'screen':
+                var screenBufferId = '#screen-buffer';
+                var screenDisplayedId = '#screen-displayed';
+                break;
+            case 'label':
+                var screenBufferId = '#label-buffer';
+                var screenDisplayedId = '#label-displayed';
+                break;
+            case 'exp':
+                var screenBufferId = '#exp-buffer';
+                var screenDisplayedId = '#exp-displayed';
+                break;
+        } 
+        $(screenBufferId).unbind('load');
+        $(screenBufferId).attr('src', '');
+        $(screenDisplayedId).attr('src', '');
     }
 
     function pressKey(form){
@@ -229,11 +290,25 @@ input { margin: 5px;}
                     -->
                     <hr/>
 					<div>
-                        <label>View the phone display</label>
+                        <label>View phone display</label>
                     </div>
 					<div>
-						<input class="button" type="button" name="button" value="Start Video" onClick="startVideo(this.form);" />
-						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo();" />
+						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "screen");' />
+						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('screen');" />
+                    </div>
+					<div>
+                        <label>View phone labels</label>
+                    </div>
+					<div>
+						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "label");' />
+						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('label');" />
+                    </div>
+					<div>
+                        <label>View Exp. screen</label>
+                    </div>
+					<div>
+						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "exp");' />
+						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('exp');" />
                     </div>
                     <hr/>
                     <div>
@@ -322,15 +397,31 @@ input { margin: 5px;}
             This script doesn't support HTTP authentication, to make it working please disable WUI authentication and hidden tags on the phone.
 			HTTPS isn't supported on this application.
 		</div>
-		 <!-- Begin Right Column -->
-		 <div id="rightcolumn">
-			<center>
-                <!-- <h1>Phone screen</h1> -->
-				<img id="image-displayed"/>
-    			<img id="image-buffer" style="visibility: hidden;"/>
+        <!-- Begin Center Column -->
+		<div id="centercolumn">
+            <center>
+                <h1>Phone screen</h1>
+				<img id="screen-displayed"/>
+    			<img id="screen-buffer" style="visibility: hidden;"/>
 			</center>
         </div>
-		 <!-- End Right Column -->
+		<!-- End Center Column -->
+        <div id="rightcolumn">
+            <center>
+                <h1>Labels screen</h1>
+				<img id="label-displayed"/>
+    			<img id="label-buffer" style="visibility: hidden;"/>
+            </center>
+        </div>
+        <!-- Begin Center Column -->
+		<div id="largecolumn">
+            <center>
+                <h1>Exp screen</h1>
+				<img id="exp-displayed"/>
+    			<img id="exp-buffer" style="visibility: hidden;"/>
+			</center>
+        </div>
+
    </div>
    <!-- End Wrapper -->
 
