@@ -11,12 +11,13 @@ body {
 
 #wrapper { 
  margin: 0 auto;
- width: 922px;
+ width: 1900px;
 
 }
 #header {
+ /* empty header (commented out for now)*/
  color: #333;
- width: 900px;
+ width: 1890px;
  float: left;
  padding: 10px;
  border: 0px;
@@ -29,7 +30,8 @@ body {
  */
 }
 #leftcolumn {
-	height: 340px;
+	/* Input column on the left */
+	height: 530px;
 	float: left;
 }
 #leftcolumn form { 
@@ -72,14 +74,15 @@ body {
 }
 
 #centercolumn { 
+ /* phone screen */
  float: left;
  color: #39a9dc;
  border: 0px solid #ccc;
  background: #ccc;
  margin: 0px 0px 0px 0px;
  padding: 10px;
- height: 340px;
- width: 450px;
+ height: 760px;
+ width: 1300px;
  display: inline;
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
@@ -87,11 +90,12 @@ body {
 }
 
 #rightcolumn { 
+ /* label screen */
  float: left;
  color: #39a9dc;
  border: 0px solid #ccc;
  background: #ccc;
- margin: 0px 0px 0px 20px;
+ margin: 0px 0px 0px 10px;
  padding: 10px;
  height: 340px;
  width: 150px;
@@ -102,11 +106,12 @@ body {
 }
 
 #largecolumn { 
- float: right;
+ /* expansion screen */
+ float: left;
  color: #39a9dc;
  border: 0px solid #ccc;
  background: #ccc;
- margin: 20px 0px 0px 0px;
+ margin: 10px 0px 0px 260px;
  padding: 10px;
  height: 450px;
  width: 640px;
@@ -269,7 +274,7 @@ input { margin: 5px;}
    <div id="wrapper">
    
          <!-- Begin Header -->
-         <div id="header"></div>
+         <!--div id="header"></div-->
 		 <!-- End Header -->
 		 <!-- Begin Left Column -->
 		 <div id="leftcolumn">
@@ -282,7 +287,7 @@ input { margin: 5px;}
                     <div><label>HTTP: </label><input type="radio" name="proto" value="http" checked/></div>
                     <div><label>HTTPS: </label><input type="radio" name="proto" value="https"/></div>
                     -->
-                    <div><label>TCP Port: </label><input type="text" name="port"/ value="80"></div>
+                    <div><label>TCP Port: </label><input type="text" name="port" value="80"/></div>
                     <!-- FIXME: browser sercurity checks will not allow -->
 					<!--
                     <div><label>Phone User: </label><input type="text" name="user"/></div>
@@ -293,22 +298,22 @@ input { margin: 5px;}
                         <label>View phone display</label>
                     </div>
 					<div>
-						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "screen");' />
-						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('screen');" />
+						<input class="button" type="button" name="button" value="Start Video" onclick="startVideo(this.form, &quot;screen&quot;);"/>
+						<input class="button" type="button" name="button" value="Stop Video" onclick="stopVideo(&#39;screen&#39;);"/>
                     </div>
 					<div>
                         <label>View phone labels</label>
                     </div>
 					<div>
-						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "label");' />
-						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('label');" />
+						<input class="button" type="button" name="button" value="Start Video" onclick="startVideo(this.form, &quot;label&quot;);"/>
+						<input class="button" type="button" name="button" value="Stop Video" onclick="stopVideo(&#39;label&#39;);"/>
                     </div>
 					<div>
                         <label>View Exp. screen</label>
                     </div>
 					<div>
-						<input class="button" type="button" name="button" value="Start Video" onClick='startVideo(this.form, "exp");' />
-						<input class="button" type="button" name="button" value="Stop Video" onClick="stopVideo('exp');" />
+						<input class="button" type="button" name="button" value="Start Video" onclick="startVideo(this.form, &quot;exp&quot;);"/>
+						<input class="button" type="button" name="button" value="Stop Video" onclick="stopVideo(&#39;exp&#39;);"/>
                     </div>
                     <hr/>
                     <div>
